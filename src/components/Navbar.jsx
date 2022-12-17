@@ -3,6 +3,43 @@ import imgLogo from './../assets/img/variedades-ampi.png';
 import { Link } from 'react-router-dom';
 
 export default function Navbar() {
+	function getHeaders() {
+		return {
+			Accept: 'application/json',
+			'Content-Type': 'application/json',
+			Authorization: localStorage.getItem('token'),
+		};
+	}
+
+	const data = {};
+
+	data.email = 'Administrador@mail.com';
+	data.pass = 'uribeParacoHP';
+
+	const peticion = () => {
+		fetch('http://127.0.0.1:64022/public/pdf/96a8a831-84a2-4ea7-837a-a4c217263777.pdf', {
+			method: 'get',
+			headers: getHeaders(),
+			credentials: 'include',
+		})
+			.then((response) => response.blob())
+			.then((blob) => {
+				const url = URL.createObjectURL(blob);
+				window.open(url);
+			})
+			.catch((err) => console.log(err));
+	};
+	const login = () => {
+		fetch('http://127.0.0.1:64022/api/login', {
+			method: 'post',
+			headers: getHeaders(),
+			credentials: 'include',
+			body: JSON.stringify(data),
+		})
+			.then((response) => response.json())
+			.then((json) => console.log(json))
+			.catch((err) => console.log(err));
+	};
 	return (
 		<>
 			<div className="offcanvas offcanvas-start w-25" id="offcanvas" data-bs-keyboard="true" data-bs-backdrop="true">
@@ -56,6 +93,8 @@ export default function Navbar() {
 					</ul>
 				</div>
 			</div>
+			<button onClick={login}>login</button>
+			<button onClick={peticion}>Enviar</button>
 			<button
 				className="btn float-start d-flex align-items-center position-absolute bg-info"
 				data-bs-toggle="offcanvas"
