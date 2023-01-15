@@ -99,22 +99,22 @@ function getDataForm() {
 	data.namePeopleCertifier = getField('nameRecomendador');
 	data.phonePeopleCertifier = getField('celRecomendador');
 	data.documentPeopleCertifier = getField('numeroDocRecomendador');
-	data.documentTypePeopleCertifier = getField('tipoDocRecomendador') != null ? typeDoc[getField('tipoDocRecomendador')] : '';
+	data.documentTypePeopleCertifier = getField('tipoDocRecomendador') ? typeDoc[getField('tipoDocRecomendador')] : undefined;
 
-	if (getField('lugarExpRecomendador') != null) {
-		console.log('Entro, no es "nulo"');
+	if (getField('lugarExpRecomendador')) {
 		data.originDocumentPeopleCertifier = getField('lugarExpRecomendador');
 	}
 
-	data.prefixDocumentTypePeopleCertifier =
-		getField('tipoDocRecomendador') != null ? prefixTypeDoc[getField('tipoDocRecomendador')] : '';
+	data.prefixDocumentTypePeopleCertifier = getField('tipoDocRecomendador')
+		? prefixTypeDoc[getField('tipoDocRecomendador')]
+		: undefined;
 	data.isManPeopleCertifier = getField('generoRecomendador') == 0;
 	data.namePeopleCertified = getField('nameRecomendado');
 	data.documentPeopleCertified = getField('numeroDocRecomendado');
-	data.documentTypePeopleCertified = getField('tipoDocRecomendado') != null ? typeDoc[getField('tipoDocRecomendado')] : '';
+	data.documentTypePeopleCertified = getField('tipoDocRecomendado') ? typeDoc[getField('tipoDocRecomendado')] : undefined;
+	data.phonePeopleCertified = getField('celPeopleRecomendado');
 
-	if (getField('lugarExpRecomendado') != null) {
-		console.log('Entro, no es "nulo"');
+	if (getField('lugarExpRecomendado')) {
 		data.originDocumentPeopleCertified = getField('lugarExpRecomendado');
 	}
 
@@ -124,10 +124,14 @@ function getDataForm() {
 		data.acquaintanceTime = getField('tiempoConocidos');
 	}
 
-	if (getField('direccionRecomendador') != null) {
-		console.log('Entro, no es "nulo"');
+	if (getField('direccionRecomendador')) {
 		data.addresPeopleCertified = getField('direccionRecomendador');
 	}
+
+	if (getField('rolEnLaComunidad')) {
+		data.homePeopleCertified = rolComunidad[getField('rolEnLaComunidad')];
+	}
+
 	return data;
 }
 
@@ -143,10 +147,8 @@ async function generatePersonalCard() {
 	if (!response.success) {
 		return alert(response.message);
 	}
-
-	setTimeout(function () {
-		getPdf(response.data.url);
-	}, 1000);
+	alert(response.message);
+	getPdf(response.data.url);
 }
 
 async function generateFamilyCard() {
@@ -161,10 +163,8 @@ async function generateFamilyCard() {
 	if (!response.success) {
 		return alert(response.message);
 	}
-
-	setTimeout(function () {
-		getPdf(response.data.url);
-	}, 1000);
+	alert(response.message);
+	getPdf(response.data.url);
 }
 
 async function generateComunityCard() {
@@ -179,8 +179,6 @@ async function generateComunityCard() {
 	if (!response.success) {
 		return alert(response.message);
 	}
-
-	setTimeout(function () {
-		getPdf(response.data.url);
-	}, 1000);
+	alert(response.message);
+	getPdf(response.data.url);
 }

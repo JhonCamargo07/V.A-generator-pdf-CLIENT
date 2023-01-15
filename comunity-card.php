@@ -49,14 +49,14 @@
 												<input type="text" name="lugarExpRecomendador" class="form-control" id="lugarExpRecomendador" />
 											</div>
 											<div class="mb-3">
-												<label for="celRecomendador" class="form-label">
+												<label for="celPeopleRecomendado" class="form-label">
 													Tel&#233;fono <span class="text-danger">*</span>
 												</label>
 												<input
 													type="number"
-													name="celRecomendador"
+													name="celPeopleRecomendado"
 													class="form-control"
-													id="celRecomendador"
+													id="celPeopleRecomendado"
 													required />
 												<div class="invalid-feedback">
 													El tel&#233;fono es obligatorio
@@ -109,10 +109,10 @@
 												<div class="invalid-feedback">El tiempo es obligatorio</div>
 											</div>
 											<div class="mb-3">
-												<label for="tipoDocRecomendado" class="form-label">
+												<label for="rolEnLaComunidad" class="form-label">
 													Rol en la comunidad <span class="text-danger">*</span>
 												</label>
-												<select class="form-control" id="tipoDocRecomendado" required>
+												<select class="form-control" id="rolEnLaComunidad" required>
 													<option value="0">Arrendatario</option>
 													<option value="1">Propietario</option>
 												</select>
