@@ -218,6 +218,6 @@
     const logout = () =>{
         localStorage.setItem('token', '');
         alert('La sesión fue cerrada exitosamente');
-        location.href = '/';
+        location.href = 'http://localhost/v.a-generator-pdf-client/';
     }
 </script>
