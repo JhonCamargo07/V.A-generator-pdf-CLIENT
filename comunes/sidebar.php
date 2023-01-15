@@ -35,7 +35,7 @@
 
     <!-- Nav Item - Tables -->
     <li class="nav-item">
-        <a class="nav-link" href="personal-card.php">
+        <a class="nav-link" href="family-card.php">
             <i class="fas fa-users"></i>
             <span>Familiar</span></a
         >
@@ -43,14 +43,14 @@
 
     <!-- Nav Item - Tables -->
     <li class="nav-item">
-        <a class="nav-link" href="personal-card.php">
+        <a class="nav-link" href="https://generadorhojadevida.000webhostapp.com/vistas/certificacion-laboral.php" target="_blank">
             <i class="fas fa-building"></i>
             <span>Laboral</span></a
         >
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="personal-card.php">
+        <a class="nav-link" href="comunity-card.php">
             <i class="fas fa-globe-americas"></i>
             <span>Comunidad</span></a
         >

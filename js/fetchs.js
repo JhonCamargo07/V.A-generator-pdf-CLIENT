@@ -1,6 +1,7 @@
 const urlFetch = 'http://127.0.0.1:64022';
 const typeDoc = ['C\u00e9dula de ciudadan\u00eda', 'C\u00e9dula de extranjer\u00eda', 'Tarjeta de identidad'];
 const prefixTypeDoc = ['C.C', 'C.E', 'T.I'];
+const rolComunidad = ['arrendatario', 'propietario'];
 
 const getHeaders = {
 	Accept: 'application/json',
@@ -85,35 +86,53 @@ const getQr = async (fullUrlQr) => {
 		.catch((err) => console.log(err));
 };
 
-async function generatePersonalCard() {
+function getField(nameField) {
+	if (document.getElementById(nameField) && document.getElementById(nameField) != '') {
+		return document.getElementById(nameField).value;
+	}
+	return;
+}
+
+function getDataForm() {
 	const data = {};
 
-	data.namePeopleCertifier = document.getElementById('nameRecomendador').value;
-	data.phonePeopleCertifier = document.getElementById('celRecomendador').value;
-	data.documentPeopleCertifier = document.getElementById('numeroDocRecomendador').value;
-	data.documentTypePeopleCertifier = typeDoc[document.getElementById('tipoDocRecomendador').value];
+	data.namePeopleCertifier = getField('nameRecomendador');
+	data.phonePeopleCertifier = getField('celRecomendador');
+	data.documentPeopleCertifier = getField('numeroDocRecomendador');
+	data.documentTypePeopleCertifier = getField('tipoDocRecomendador') != null ? typeDoc[getField('tipoDocRecomendador')] : '';
 
-	if (document.getElementById('lugarExpRecomendador').value != '') {
-		data.originDocumentPeopleCertifier = document.getElementById('lugarExpRecomendador').value;
+	if (getField('lugarExpRecomendador') != null) {
+		console.log('Entro, no es "nulo"');
+		data.originDocumentPeopleCertifier = getField('lugarExpRecomendador');
 	}
 
-	data.prefixDocumentTypePeopleCertifier = prefixTypeDoc[document.getElementById('tipoDocRecomendador').value];
-	data.isManPeopleCertifier = document.getElementById('generoRecomendador').value == 0;
+	data.prefixDocumentTypePeopleCertifier =
+		getField('tipoDocRecomendador') != null ? prefixTypeDoc[getField('tipoDocRecomendador')] : '';
+	data.isManPeopleCertifier = getField('generoRecomendador') == 0;
+	data.namePeopleCertified = getField('nameRecomendado');
+	data.documentPeopleCertified = getField('numeroDocRecomendado');
+	data.documentTypePeopleCertified = getField('tipoDocRecomendado') != null ? typeDoc[getField('tipoDocRecomendado')] : '';
 
-	data.namePeopleCertified = document.getElementById('nameRecomendado').value;
-	data.documentPeopleCertified = document.getElementById('numeroDocRecomendado').value;
-	data.documentTypePeopleCertified = typeDoc[document.getElementById('tipoDocRecomendado').value];
-	if (document.getElementById('lugarExpRecomendado').value != '') {
-		data.originDocumentPeopleCertified = document.getElementById('lugarExpRecomendado').value;
+	if (getField('lugarExpRecomendado') != null) {
+		console.log('Entro, no es "nulo"');
+		data.originDocumentPeopleCertified = getField('lugarExpRecomendado');
 	}
 
-	data.isManPeopleCertified = document.getElementById('generoRecomendado').value == 0;
+	data.isManPeopleCertified = getField('generoRecomendado') == 0;
 
-	data.acquaintanceTime = document.getElementById('tiempoConocidos').value;
-
-	if (document.getElementById('direccionRecomendador').value != '') {
-		data.addresPeopleCertified = document.getElementById('direccionRecomendador').value;
+	if (document.getElementById('tiempoConocidos')) {
+		data.acquaintanceTime = getField('tiempoConocidos');
 	}
+
+	if (getField('direccionRecomendador') != null) {
+		console.log('Entro, no es "nulo"');
+		data.addresPeopleCertified = getField('direccionRecomendador');
+	}
+	return data;
+}
+
+async function generatePersonalCard() {
+	const data = this.getDataForm();
 
 	const response = await fetch(`${urlFetch}/api/personal-card`, {
 		method: 'POST',
@@ -125,9 +144,43 @@ async function generatePersonalCard() {
 		return alert(response.message);
 	}
 
-	alert(response.message);
+	setTimeout(function () {
+		getPdf(response.data.url);
+	}, 1000);
+}
 
-	// setTimeout(() => {
-	getPdf(response.data.url);
-	// }, 2000);
+async function generateFamilyCard() {
+	const data = this.getDataForm();
+
+	const response = await fetch(`${urlFetch}/api/family-card`, {
+		method: 'POST',
+		headers: getHeaders,
+		body: JSON.stringify(data),
+	}).then((response) => response.json());
+
+	if (!response.success) {
+		return alert(response.message);
+	}
+
+	setTimeout(function () {
+		getPdf(response.data.url);
+	}, 1000);
+}
+
+async function generateComunityCard() {
+	const data = this.getDataForm();
+
+	const response = await fetch(`${urlFetch}/api/comunity-card`, {
+		method: 'POST',
+		headers: getHeaders,
+		body: JSON.stringify(data),
+	}).then((response) => response.json());
+
+	if (!response.success) {
+		return alert(response.message);
+	}
+
+	setTimeout(function () {
+		getPdf(response.data.url);
+	}, 1000);
 }
