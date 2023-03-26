@@ -23,11 +23,7 @@
 					<div class="container-fluid">
 						<!-- Page Heading -->
 						<h1 class="h3 mb-2 text-gray-800">Listado de cartas</h1>
-						<p class="mb-4">
-							En este espacio se muestran todas las cartas que durante el ultimo mes se han realizado. For more information
-							about DataTables, please visit the
-							<a target="_blank" href="https://datatables.net">official DataTables documentation</a>.
-						</p>
+						<p class="mb-4">En este espacio se muestran todas las cartas que durante el ultimo mes se han realizado.</p>
 
 						<!-- DataTales Example -->
 						<div class="card shadow mb-4">
@@ -36,7 +32,7 @@
 							</div>
 							<div class="card-body">
 								<div class="table-responsive">
-									<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+									<table class="table table-bordered" id="dataTable">
 										<thead>
 											<tr>
 												<th class="text-center">#</th>
@@ -45,6 +41,7 @@
 												<th class="text-center">Tipo de carta</th>
 												<th class="text-center">PDF</th>
 												<th class="text-center">QR</th>
+												<th class="text-center">Eliminar</th>
 											</tr>
 										</thead>
 										<tbody></tbody>

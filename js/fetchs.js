@@ -30,13 +30,26 @@ async function signIn() {
 	location.href = 'home.php';
 }
 
+async function deleteFile(idFile) {
+	const data = {};
+	data.idFile = idFile;
+
+	const response = await fetch(`${urlFetch}/api/deleteCard`, {
+		method: 'DELETE',
+		headers: getHeaders,
+		body: JSON.stringify(data),
+	}).then((response) => response.json());
+
+	alert(response.message);
+
+	location.reload();
+}
+
 async function getInfoFiles() {
 	const response = await fetch(`${urlFetch}/public/`, {
 		method: 'GET',
 		headers: getHeaders,
 	}).then((response) => response.json());
-
-	console.log(response);
 
 	let infoFiles = '';
 	response.map((file, index) => {
@@ -53,22 +66,35 @@ async function getInfoFiles() {
 			<td class="text-center">
 				<a onclick="getQr('${file.qr}')" class="btn btn-warning btn-circle text-center btn"><i class="fas fa-qrcode"></i></a>
 			</td>
+			<td class="text-center">
+				<a onclick="deleteFile('${file.id}')" class="btn btn-danger btn-circle text-center btn"><i class="fas fa-trash"></i></a></td>
 		</tr>` + infoFiles;
 	});
 
 	document.querySelector('#dataTable tbody').outerHTML = infoFiles;
+
+	// Destruir la tabla actual
+	$('#dataTable').DataTable().destroy();
+
+	// Crear una nueva tabla con DataTable
+	$('#dataTable').DataTable({
+		ordering: true,
+		searching: true,
+		// Configurar el idioma
+		language: {
+			url: '//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json',
+		},
+	});
 }
 
 const getPdf = async (fullUrlPdf) => {
-	console.log(fullUrlPdf);
 	fetch(`${fullUrlPdf}`, {
 		method: 'get',
 		headers: getHeaders,
 	})
 		.then((response) => response.blob())
 		.then((blob) => {
-			const urlPdf = URL.createObjectURL(blob);
-			window.open(urlPdf);
+			window.open(URL.createObjectURL(blob));
 		})
 		.catch((err) => console.log(err));
 };
@@ -80,8 +106,7 @@ const getQr = async (fullUrlQr) => {
 	})
 		.then((response) => response.blob())
 		.then((blob) => {
-			const urlQr = URL.createObjectURL(blob);
-			window.open(urlQr);
+			window.open(URL.createObjectURL(blob));
 		})
 		.catch((err) => console.log(err));
 };
@@ -90,7 +115,6 @@ function getField(nameField) {
 	if (document.getElementById(nameField) && document.getElementById(nameField) != '') {
 		return document.getElementById(nameField).value;
 	}
-	return;
 }
 
 function getDataForm() {
