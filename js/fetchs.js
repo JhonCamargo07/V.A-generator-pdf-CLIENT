@@ -30,7 +30,31 @@ async function signIn() {
 	location.href = 'home.php';
 }
 
+async function getNewToken() {
+	const response = await fetch(`${urlFetch}/api/resetToken`, {
+		method: 'POST',
+		headers: getHeaders,
+	}).then((response) => response.json());
+
+	if (!response.success) {
+		alert('Su sesi\u00f3n ha espirado, debe iniciarse sesi\u00f3n nuevamente');
+		location.href = 'index.php';
+		return;
+	}
+
+	localStorage.setItem('token', response.token);
+}
+
+async function resetToken() {
+	getNewToken();
+	setTimeout(() => {
+		getNewToken();
+	}, 270000); // 4.5 m
+}
+
 async function deleteFile(idFile) {
+	if (!confirm('¿Enserio quieres eliminar esta carta?')) return;
+
 	const data = {};
 	data.idFile = idFile;
 
@@ -38,6 +62,20 @@ async function deleteFile(idFile) {
 		method: 'DELETE',
 		headers: getHeaders,
 		body: JSON.stringify(data),
+	}).then((response) => response.json());
+
+	alert(response.message);
+
+	location.reload();
+}
+
+async function deleteAllFiles() {
+	if (!confirm('¿Enserio quieres eliminar todas las cartas?')) return;
+
+	const response = await fetch(`${urlFetch}/api/deleteAllCards`, {
+		method: 'DELETE',
+		headers: getHeaders,
+		body: JSON.stringify({}),
 	}).then((response) => response.json());
 
 	alert(response.message);
@@ -67,7 +105,8 @@ async function getInfoFiles() {
 				<a onclick="getQr('${file.qr}')" class="btn btn-warning btn-circle text-center btn"><i class="fas fa-qrcode"></i></a>
 			</td>
 			<td class="text-center">
-				<a onclick="deleteFile('${file.id}')" class="btn btn-danger btn-circle text-center btn"><i class="fas fa-trash"></i></a></td>
+				<a onclick="deleteFile('${file.id}')" class="btn btn-danger btn-circle text-center btn"><i class="fas fa-trash"></i></a>
+			</td>
 		</tr>` + infoFiles;
 	});
 

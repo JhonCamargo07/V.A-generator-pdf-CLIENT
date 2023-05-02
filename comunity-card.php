@@ -170,6 +170,8 @@
 				e.preventDefault();
 				generateComunityCard();
 			});
+
+			resetToken()
 		</script>
 	</body>
 </html>

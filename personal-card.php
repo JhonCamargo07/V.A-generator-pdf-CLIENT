@@ -203,6 +203,8 @@
 				e.preventDefault();
 				generatePersonalCard();
 			});
+
+			resetToken()
 		</script>
 	</body>
 </html>

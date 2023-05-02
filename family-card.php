@@ -187,6 +187,8 @@
 				e.preventDefault();
 				generateFamilyCard();
 			});
+
+			resetToken()
 		</script>
 	</body>
 </html>

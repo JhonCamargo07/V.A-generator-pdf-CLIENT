@@ -47,6 +47,7 @@
 										<tbody></tbody>
 									</table>
 								</div>
+								<p class="text-center mt-3"><a href="">Eliminar todos las cartas hechas hasta el momento</a></p>
 							</div>
 						</div>
 					</div>
@@ -115,6 +116,8 @@
 			setInterval(() => {
 				getInfoFiles();
 			}, 3600000);
+
+			resetToken()
 		</script>
 	</body>
 </html>
