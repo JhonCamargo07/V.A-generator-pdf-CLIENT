@@ -79,10 +79,12 @@ async function deleteFile(idFile) {
 async function deleteAllFiles() {
 	if (!confirm('¿Enserio quieres eliminar todas las cartas?')) return;
 
+	const pass = prompt('Para continuar, ingresa la contraseña');
+
 	const response = await fetch(`${urlFetch}/api/deleteAllCards`, {
 		method: 'DELETE',
 		headers: getHeaders(),
-		body: JSON.stringify({}),
+		body: JSON.stringify({ pass }),
 	}).then((response) => response.json());
 
 	alert(response.message);
