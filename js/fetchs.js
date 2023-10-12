@@ -1,12 +1,19 @@
 const urlFetch = 'http://127.0.0.1:64022';
-const typeDoc = ['C\u00e9dula de ciudadan\u00eda', 'C\u00e9dula de extranjer\u00eda', 'Tarjeta de identidad'];
+const typeDoc = [
+	'C\u00e9dula de ciudadan\u00eda',
+	'C\u00e9dula de extranjer\u00eda',
+	'Tarjeta de identidad',
+];
 const prefixTypeDoc = ['C.C', 'C.E', 'T.I'];
 const rolComunidad = ['arrendatario', 'propietario'];
 
-const getHeaders = {
-	Accept: 'application/json',
-	'Content-Type': 'application/json',
-	Authorization: localStorage.getItem('token'),
+const getHeaders = () => {
+	const token = localStorage.getItem('token');
+	return {
+		Accept: 'application/json',
+		'Content-Type': 'application/json',
+		Authorization: token,
+	};
 };
 
 async function signIn() {
@@ -17,7 +24,7 @@ async function signIn() {
 
 	const response = await fetch(`${urlFetch}/api/login`, {
 		method: 'POST',
-		headers: getHeaders,
+		headers: getHeaders(),
 		body: JSON.stringify(data),
 	}).then((response) => response.json());
 
@@ -33,7 +40,7 @@ async function signIn() {
 async function getNewToken() {
 	const response = await fetch(`${urlFetch}/api/resetToken`, {
 		method: 'POST',
-		headers: getHeaders,
+		headers: getHeaders(),
 	}).then((response) => response.json());
 
 	if (!response.success) {
@@ -47,9 +54,9 @@ async function getNewToken() {
 
 async function resetToken() {
 	getNewToken();
-	setTimeout(() => {
+	setInterval(() => {
 		getNewToken();
-	}, 270000); // 4.5 m
+	}, 25000); // 25s
 }
 
 async function deleteFile(idFile) {
@@ -60,7 +67,7 @@ async function deleteFile(idFile) {
 
 	const response = await fetch(`${urlFetch}/api/deleteCard`, {
 		method: 'DELETE',
-		headers: getHeaders,
+		headers: getHeaders(),
 		body: JSON.stringify(data),
 	}).then((response) => response.json());
 
@@ -74,7 +81,7 @@ async function deleteAllFiles() {
 
 	const response = await fetch(`${urlFetch}/api/deleteAllCards`, {
 		method: 'DELETE',
-		headers: getHeaders,
+		headers: getHeaders(),
 		body: JSON.stringify({}),
 	}).then((response) => response.json());
 
@@ -86,7 +93,7 @@ async function deleteAllFiles() {
 async function getInfoFiles() {
 	const response = await fetch(`${urlFetch}/public/`, {
 		method: 'GET',
-		headers: getHeaders,
+		headers: getHeaders(),
 	}).then((response) => response.json());
 
 	let infoFiles = '';
@@ -99,13 +106,19 @@ async function getInfoFiles() {
 			<td class="text-center pt-4">${file.hora}</td>
 			<td class="text-center pt-4">${file.tipo_carta}</td>
 			<td class="text-center">
-				<a onclick="getPdf('${file.url}')" class="btn btn-info btn-circle text-center btn"><i class="fas fa-file-pdf"></i></a>
+				<a onclick="getPdf('${
+					file.url
+				}')" class="btn btn-info btn-circle text-center btn"><i class="fas fa-file-pdf"></i></a>
 			</td>
 			<td class="text-center">
-				<a onclick="getQr('${file.qr}')" class="btn btn-warning btn-circle text-center btn"><i class="fas fa-qrcode"></i></a>
+				<a onclick="getQr('${
+					file.qr
+				}')" class="btn btn-warning btn-circle text-center btn"><i class="fas fa-qrcode"></i></a>
 			</td>
 			<td class="text-center">
-				<a onclick="deleteFile('${file.id}')" class="btn btn-danger btn-circle text-center btn"><i class="fas fa-trash"></i></a>
+				<a onclick="deleteFile('${
+					file.id
+				}')" class="btn btn-danger btn-circle text-center btn"><i class="fas fa-trash"></i></a>
 			</td>
 		</tr>` + infoFiles;
 	});
@@ -129,7 +142,7 @@ async function getInfoFiles() {
 const getPdf = async (fullUrlPdf) => {
 	fetch(`${fullUrlPdf}`, {
 		method: 'get',
-		headers: getHeaders,
+		headers: getHeaders(),
 	})
 		.then((response) => response.blob())
 		.then((blob) => {
@@ -141,7 +154,7 @@ const getPdf = async (fullUrlPdf) => {
 const getQr = async (fullUrlQr) => {
 	fetch(`${fullUrlQr}`, {
 		method: 'get',
-		headers: getHeaders,
+		headers: getHeaders(),
 	})
 		.then((response) => response.blob())
 		.then((blob) => {
@@ -162,7 +175,9 @@ function getDataForm() {
 	data.namePeopleCertifier = getField('nameRecomendador');
 	data.phonePeopleCertifier = getField('celRecomendador');
 	data.documentPeopleCertifier = getField('numeroDocRecomendador');
-	data.documentTypePeopleCertifier = getField('tipoDocRecomendador') ? typeDoc[getField('tipoDocRecomendador')] : undefined;
+	data.documentTypePeopleCertifier = getField('tipoDocRecomendador')
+		? typeDoc[getField('tipoDocRecomendador')]
+		: undefined;
 
 	if (getField('lugarExpRecomendador')) {
 		data.originDocumentPeopleCertifier = getField('lugarExpRecomendador');
@@ -174,7 +189,9 @@ function getDataForm() {
 	data.isManPeopleCertifier = getField('generoRecomendador') == 0;
 	data.namePeopleCertified = getField('nameRecomendado');
 	data.documentPeopleCertified = getField('numeroDocRecomendado');
-	data.documentTypePeopleCertified = getField('tipoDocRecomendado') ? typeDoc[getField('tipoDocRecomendado')] : undefined;
+	data.documentTypePeopleCertified = getField('tipoDocRecomendado')
+		? typeDoc[getField('tipoDocRecomendado')]
+		: undefined;
 	data.phonePeopleCertified = getField('celPeopleRecomendado');
 
 	if (getField('lugarExpRecomendado')) {
@@ -203,7 +220,7 @@ async function generatePersonalCard() {
 
 	const response = await fetch(`${urlFetch}/api/personal-card`, {
 		method: 'POST',
-		headers: getHeaders,
+		headers: getHeaders(),
 		body: JSON.stringify(data),
 	}).then((response) => response.json());
 
@@ -219,7 +236,7 @@ async function generateFamilyCard() {
 
 	const response = await fetch(`${urlFetch}/api/family-card`, {
 		method: 'POST',
-		headers: getHeaders,
+		headers: getHeaders(),
 		body: JSON.stringify(data),
 	}).then((response) => response.json());
 
@@ -235,7 +252,7 @@ async function generateComunityCard() {
 
 	const response = await fetch(`${urlFetch}/api/comunity-card`, {
 		method: 'POST',
-		headers: getHeaders,
+		headers: getHeaders(),
 		body: JSON.stringify(data),
 	}).then((response) => response.json());
 
